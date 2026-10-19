@@ -783,6 +783,199 @@ body {
 }
 
 /* ==========================================================================
+   Clinical Context Panel
+   ========================================================================== */
+
+.clinical-context-section {
+  background: #f8fafc;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 1rem 1.15rem;
+}
+
+.clinical-context-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.context-card {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  border-left: 3px solid var(--primary);
+  transition: box-shadow 0.15s ease;
+}
+
+.context-card:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.context-card.high {
+  border-left-color: var(--rose);
+  background: #fef2f2;
+}
+
+.context-card.warning {
+  border-left-color: var(--amber);
+  background: #fffbeb;
+}
+
+.context-card.info {
+  border-left-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.context-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.context-biomarker {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.context-condition {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-main);
+  flex: 1;
+}
+
+.context-level-badge {
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  flex-shrink: 0;
+}
+
+.context-level-high {
+  background: var(--rose-bg);
+  color: var(--rose-dark);
+  border: 1px solid var(--rose-border);
+}
+
+.context-level-warning {
+  background: var(--amber-bg);
+  color: var(--amber-dark);
+  border: 1px solid var(--amber-border);
+}
+
+.context-level-info {
+  background: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+
+.context-value {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-bottom: 0.5rem;
+}
+
+.context-associations {
+  margin-bottom: 0.5rem;
+}
+
+.context-associations-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.context-associations-list {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  padding-left: 1rem;
+}
+
+.context-associations-list li {
+  margin-bottom: 0.2rem;
+}
+
+.context-guidelines {
+  border-top: 1px solid var(--border-light);
+  padding-top: 0.5rem;
+}
+
+.context-guidelines-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.context-guidelines-list {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  padding-left: 1rem;
+}
+
+.context-guidelines-list li {
+  margin-bottom: 0.15rem;
+}
+
+.clinical-disclaimer {
+  background: #fef2f2;
+  border: 1px solid var(--rose-border);
+  border-radius: 8px;
+  padding: 0.75rem 0.85rem;
+  font-size: 0.68rem;
+  color: var(--rose-dark);
+  line-height: 1.5;
+}
+
+.clinical-disclaimer strong {
+  color: var(--rose-dark);
+}
+
+.clinical-disclaimer em {
+  color: var(--rose);
+}
+
+/* No findings state */
+.context-empty {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--text-muted);
+}
+
+.context-empty i {
+  font-size: 2rem;
+  color: var(--emerald);
+  margin-bottom: 0.75rem;
+}
+
+.context-empty p {
+  font-size: 0.8rem;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
    Performance Modal Styles
    ========================================================================== */
 

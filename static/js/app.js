@@ -83,6 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       document.getElementById("resultInitialState").style.display = "block";
       document.getElementById("resultActiveState").style.display = "none";
+      document.getElementById("clinicalContextSection").style.display = "none";
     });
   }
 
@@ -227,11 +228,97 @@ document.addEventListener("DOMContentLoaded", () => {
         flagsContainer.appendChild(item);
       });
     }
+
+    // Fetch and render clinical context (evidence-based associations)
+    const payload = {};
+    FIELDS.forEach((f) => {
+      payload[f] = parseFloat(document.getElementById(`input${f}`).value);
+    });
+    fetchAndRenderClinicalContext(payload);
   }
 
-  // ==========================================================================
-  // Single Entry Point: Performance Measures & Confusion Matrix Modal
-  // ==========================================================================
+  // --- Clinical Context Rendering ---
+  async function fetchAndRenderClinicalContext(payload) {
+    try {
+      const res = await fetch("/api/clinical-context", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (data.success) {
+        renderClinicalContext(data.data);
+      }
+    } catch (err) {
+      console.error("Failed to fetch clinical context:", err);
+    }
+  }
+
+  function renderClinicalContext(contextData) {
+    const section = document.getElementById("clinicalContextSection");
+    const container = document.getElementById("clinicalContextContainer");
+    const disclaimerEl = document.getElementById("clinicalDisclaimer");
+
+    if (!contextData.findings || contextData.findings.length === 0) {
+      container.innerHTML = `
+        <div class="context-empty">
+          <i class="fa-solid fa-circle-check"></i>
+          <p>No specific clinical thresholds exceeded. All biomarkers fall within normal reference ranges.</p>
+        </div>
+      `;
+    } else {
+      let html = "";
+      contextData.findings.forEach((f) => {
+        const levelClass = f.level === "high" ? "high" : (f.level === "warning" ? "warning" : "info");
+        const levelLabel = f.level === "high" ? "HIGH" : (f.level === "warning" ? "WARNING" : "INFO");
+        const levelBadgeClass = f.level === "high" ? "context-level-high" : (f.level === "warning" ? "context-level-warning" : "context-level-info");
+        
+        const associationsHtml = f.associations.map(a => `<li>${a}</li>`).join("");
+        const guidelinesHtml = f.guidelines.map(g => `<li>${g}</li>`).join("");
+        
+        html += `
+          <div class="context-card ${levelClass}">
+            <div class="context-header">
+              <span class="context-biomarker">${f.biomarker}</span>
+              <span class="context-condition">${f.condition}</span>
+              <span class="context-level-badge ${levelBadgeClass}">${levelLabel}</span>
+            </div>
+            <div class="context-value">Input value: ${f.value} ${getUnit(f.biomarker)}</div>
+            
+            <div class="context-associations">
+              <div class="context-associations-title"><i class="fa-solid fa-link"></i> Evidence-Based Associations</div>
+              <ul class="context-associations-list">
+                ${associationsHtml}
+              </ul>
+            </div>
+            
+            <div class="context-guidelines">
+              <div class="context-guidelines-title"><i class="fa-solid fa-gavel"></i> Guideline References</div>
+              <ul class="context-guidelines-list">
+                ${guidelinesHtml}
+              </ul>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    disclaimerEl.innerHTML = contextData.disclaimer;
+    section.style.display = "block";
+  }
+
+  function getUnit(field) {
+    const units = {
+      Age: "years",
+      SystolicBP: "mmHg",
+      DiastolicBP: "mmHg",
+      BS: "mmol/L",
+      BodyTemp: "°F",
+      HeartRate: "bpm"
+    };
+    return units[field] || "";
+  }
   const perfModal = document.getElementById("perfModal");
   const openPerfBtn = document.getElementById("openPerfModalBtn");
   const closePerfBtn = document.getElementById("closePerfModalBtn");
